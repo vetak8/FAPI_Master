@@ -1,12 +1,13 @@
 import os
 import re
+import pickle
 from langchain.docstore.document import  Document
 from langchain.text_splitter import MarkdownHeaderTextSplitter
 from tqdm import tqdm
 from typing import List, Tuple
 PATH = './docs/'
 
-def get_chunks(path) -> List[Tuple[str, str]]:
+def get_chunks(path: str = PATH) -> List[Tuple[str, str]]:
     headers_to_split_on = [
         ('#', 'Header 1'),
         ('##', 'Header 2'),
@@ -34,7 +35,7 @@ def get_chunks(path) -> List[Tuple[str, str]]:
                     print(f'Ошибка обработки файла {file_path}: {e}')
                     continue
 
-    print(f'Всего создано {len(all_chunks)} чанков из {len(files)} файлов')
+    print(f'\nВсего создано {len(all_chunks)} чанков из {len(files)} файлов')
     return all_chunks
                 
 
@@ -65,7 +66,15 @@ def clean_text(text: str) -> str:
     
     # Удаляем лишние пробелы и переносы строк
     cleaned = re.sub(r'\s+', ' ', cleaned)
-    cleaned = cleaned.strip()
+    cleaned = cleaned.strip().lower()
 
     return cleaned
-    
+
+if __name__ == '__main__':
+
+    print(f'\n\nПарсинг Markdown файлов в директории {PATH}\n\n')
+    chunks = get_chunks(PATH)
+
+    with open('dumps/chunks.pkl', 'wb') as f:
+        print(f'Сохранение файла {f.name}')
+        pickle.dump(chunks, f)
