@@ -59,7 +59,7 @@ class VectorDB:
 
 
 
-    def search(self, query:str, limit=5):
+    def search(self, query:str, limit=3):
         '''Поиск похожих чанков'''
         query_embedding = self.embedding_model.encode(query).tolist()
 
